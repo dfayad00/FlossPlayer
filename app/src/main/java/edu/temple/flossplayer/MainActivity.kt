@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
@@ -20,6 +19,11 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
 import edu.temple.audlibplayer.PlayerService
+import okhttp3.OkHttpClient
+import java.io.File
+import java.nio.file.attribute.AclEntry.newBuilder
+import java.util.concurrent.TimeUnit
+import java.util.stream.Stream.builder
 
 class MainActivity : AppCompatActivity(), BookControlFragment.BookControlInterface {
 
@@ -196,6 +200,16 @@ class MainActivity : AppCompatActivity(), BookControlFragment.BookControlInterfa
     }
 
     override fun playBook() {
+        val selectedBook = bookViewModel.getSelectedBook()?.value
+
+        fileName = selectedBook?.title.toString()
+
+        val file = File(filesDir, fileName)
+
+        if (!fileList().contains(fileName)) {
+
+        }
+
         bookViewModel.getSelectedBook()?.value?.apply {
             mediaControllerBinder?.run {
                 bookViewModel.setBookPlayed(false)
