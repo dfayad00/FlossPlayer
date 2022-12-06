@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity(), BookControlFragment.BookControlInterfa
     private val searchURL = "https://kamorris.com/lab/flossplayer/search.php?query="
     private lateinit var progressSeekBar: SeekBar
     lateinit var bookServiceIntent: Intent
+    private lateinit var fileName: String
 
     var mediaControllerBinder: PlayerService.MediaControlBinder? = null
 
