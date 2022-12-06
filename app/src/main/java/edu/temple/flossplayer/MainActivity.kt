@@ -4,6 +4,7 @@ import android.app.SearchManager
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -19,15 +20,15 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
 import edu.temple.audlibplayer.PlayerService
-import okhttp3.OkHttpClient
 import java.io.File
-import java.nio.file.attribute.AclEntry.newBuilder
-import java.util.concurrent.TimeUnit
-import java.util.stream.Stream.builder
+import java.io.FileOutputStream
+import java.net.URL
+import java.nio.channels.Channels
 
 class MainActivity : AppCompatActivity(), BookControlFragment.BookControlInterface {
 
     private val searchURL = "https://kamorris.com/lab/flossplayer/search.php?query="
+    private val downloadURL = "https://kamorris.com/lab/flossplayer/download.php?id="
     private lateinit var progressSeekBar: SeekBar
     lateinit var bookServiceIntent: Intent
     private lateinit var fileName: String
@@ -207,7 +208,15 @@ class MainActivity : AppCompatActivity(), BookControlFragment.BookControlInterfa
         val file = File(filesDir, fileName)
 
         if (!fileList().contains(fileName)) {
+            val url = URL(downloadURL + selectedBook?.title.toString())
 
+            url.openStream().use {
+                Channels.newChannel(it).use { rbc ->
+                    FileOutputStream(file).use { fos ->
+                        fos.channel.transferFrom(rbc, 0, Long.MAX_VALUE)
+                    }
+                }
+            }
         }
 
         bookViewModel.getSelectedBook()?.value?.apply {
