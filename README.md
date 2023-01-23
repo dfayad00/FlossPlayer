@@ -1,4 +1,3 @@
-# FlossPlayer
 <h1 align-"center">Audio book player with built in search function.</h1>
 
 <p align ="center">
